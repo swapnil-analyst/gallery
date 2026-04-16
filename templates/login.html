@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e, #111);
+        }
+
+        .box {
+            width: 350px;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+            color: white;
+        }
+
+        .box h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #ff4b5c;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ff2d42;
+            transform: scale(1.05);
+        }
+
+        .note {
+            font-size: 12px;
+            margin-top: 15px;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>🔐 Enter Password</h2>
+
+    <form method="POST">
+        <input type="password" name="password" placeholder="Enter event password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="note">Protected Event Gallery Access</div>
+</div>
+
+</body>
+</html>

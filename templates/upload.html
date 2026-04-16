@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upload</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: Arial;
+    color: white;
+}
+
+.box {
+    width: 380px;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.drop {
+    border: 2px dashed #555;
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+input {
+    display: none;
+}
+
+/* thumbnails */
+#preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.thumb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ❌ remove button */
+.remove {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    cursor: pointer;
+}
+
+button.upload {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #ff4b5c;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>📤 Upload Images</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="drop" onclick="document.getElementById('file').click()">
+    Click to select images
+</div>
+
+<input type="file" id="file" name="images" multiple accept="image/*">
+
+<div id="preview"></div>
+
+<button class="upload" type="submit">Upload</button>
+
+</form>
+
+</div>
+
+<script>
+const input = document.getElementById("file");
+const preview = document.getElementById("preview");
+
+let filesArray = [];
+
+input.addEventListener("change", function () {
+    filesArray = Array.from(input.files);
+    render();
+});
+
+function render() {
+    preview.innerHTML = "";
+
+    filesArray.forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const div = document.createElement("div");
+            div.className = "thumb";
+
+            div.innerHTML = `
+                <img src="${e.target.result}">
+                <button class="remove" onclick="removeImg(${index})">×</button>
+            `;
+
+            preview.appendChild(div);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeImg(index) {
+    filesArray.splice(index, 1);
+
+    const dt = new DataTransfer();
+    filesArray.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+
+    render();
+}
+</script>
+
+</body>
+</html>
