@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Event Gallery</title>
 
@@ -49,32 +50,20 @@
         /* GALLERY GRID */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
         }
 
-        /* CARD */
-        .card {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #1a1a1a;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: 0.2s;
+        .card img {
+            width: 100%; 
+            height: 180px;
+            object-fit: cover;
         }
-
         .card:hover {
             transform: scale(1.02);
         }
 
-        .card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
-
-        /* 3 DOT MENU */
+            /* 3 DOT MENU */
         .menu {
             position: absolute;
             top: 10px;
@@ -125,9 +114,20 @@
 
 <body>
 
-<div class="header">
-    📸 Event Gallery
+<div class="header-bar">
+    <div class="title">📸 {{ event.name }}</div>
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
 </div>
+
+<p>{{ count }} Photos</p>
+<button onclick="copyLink()">🔗 Copy Event Link</button>
+
+<script>
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link Copied!");
+}
+</script>
 
 <!-- UPLOAD -->
 <div class="upload-box">
@@ -162,8 +162,9 @@
                 </a>
 
                 <!-- DELETE -->
-                <button onclick="deleteImage(this)">Delete</button>
-
+                <a href="/delete/{{ event_id }}/{{ image }}">
+                    Delete
+                </a>
             </div>
         </div>
 

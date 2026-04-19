@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Create Event</title>
 
@@ -86,10 +87,15 @@
 
     <h2>Create Event</h2>
 
-    <form method="POST">
-        <input type="password" name="password" placeholder="Set Event Password" required>
-        <button type="submit">Create Event</button>
-    </form>
+  <form method="POST">
+
+    <input type="text" name="event_name" placeholder="Event Name" required>
+
+    <input type="password" name="password" placeholder="Set Event Password" required>
+
+    <button type="submit">Create Event</button>
+ 
+   </form>
 
     <div class="footer">
         Your private photo event system
