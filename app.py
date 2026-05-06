@@ -1,17 +1,26 @@
 import os
-import uuid
 import random
 import string
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, Event
+from concurrent.futures import ThreadPoolExecutor
+from werkzeug.utils import secure_filename
+from models import db, Event, Image
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name="duv4aa2nv",
+    api_key="561459431336125",
+    api_secret="ODGm4AyUUQ-qdLN1AEq_m_wyXFc"
+)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['UPLOAD_FOLDER'] = 'static/images'
-
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 db.init_app(app)
 
 # Create DB
@@ -38,7 +47,6 @@ def home():
         hashed = generate_password_hash(password)
         
         name = request.form['event_name']  
-        password = request.form.get('password')
         new_event = Event(id=event_id, name=name, password=hashed)
         db.session.add(new_event)
         db.session.commit()
@@ -69,8 +77,6 @@ def login(event_id):
 
     return render_template('login.html')
 
-
-# GALLERY
 # GALLERY 
 @app.route('/gallery/<event_id>')
 def gallery(event_id):
@@ -86,7 +92,7 @@ def gallery(event_id):
     # 👇 ADD THIS
     event = Event.query.get(event_id)
 
-    images = os.listdir(folder)
+    images = Image.query.filter_by(event_id=event_id).all()
     count = len(images)
 
     return render_template(
@@ -103,45 +109,38 @@ def upload(event_id):
         return redirect(f'/login/{event_id}')
 
     files = request.files.getlist('images')
-    folder = os.path.join(app.config['UPLOAD_FOLDER'], event_id)
 
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
     def allowed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-    from werkzeug.utils import secure_filename
+    images_to_save = []
 
     for file in files:
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            result = cloudinary.uploader.upload(file)
+            images_to_save.append(
+                Image(event_id=event_id, url=result['secure_url'])
+            )
 
-            filepath = os.path.join(folder, filename)
-            count = 1
+    for img in images_to_save:
+        db.session.add(img)
 
-            while os.path.exists(filepath):
-                name, ext = filename.rsplit('.', 1)
-                filename = f"{name}_{count}.{ext}"
-                filepath = os.path.join(folder, filename)
-                count += 1
-
-            file.save(filepath)
+    db.session.commit()
 
     return redirect(f'/gallery/{event_id}')
 
 # DELETE (REAL DELETE)
-@app.route('/delete/<event_id>/<filename>')
-def delete(event_id, filename):
-    if session.get('event') != event_id:
-        return redirect(f'/login/{event_id}')
+@app.route('/delete/<int:image_id>')
+def delete(image_id):
+    image = Image.query.get(image_id)
 
-    path = os.path.join(app.config['UPLOAD_FOLDER'], event_id, filename)
+    if image:
+        db.session.delete(image)
+        db.session.commit()
 
-    if os.path.exists(path):
-        os.remove(path)
-
-    return redirect(f'/gallery/{event_id}')
-
+    return redirect(request.referrer)
 
 if __name__ == '__main__':
     app.run(debug=True)

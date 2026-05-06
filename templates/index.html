@@ -143,33 +143,35 @@ function copyLink() {
     {% for image in images %}
     <div class="card">
 
-        <img src="{{ url_for('static', filename='images/' + event_id + '/' + image) }}">
+    <a href="{{ image.url }}" target="_blank">
+        <img src="{{ image.url }}">
+    </a>
 
-        <!-- MENU -->
-        <div class="menu">
-            <span onclick="toggleMenu(event, this)">⋮</span>
+    <!-- MENU -->
+    <div class="menu">
+        <span onclick="toggleMenu(event, this)">⋮</span>
 
-            <div class="dropdown">
+        <div class="dropdown">
 
-                <!-- VIEW -->
-                <a href="{{ url_for('static', filename='images/' + event_id + '/' + image) }}" target="_blank">
-                    View
-                </a>
+            <!-- VIEW -->
+            <a href="{{ image.url }}" target="_blank">
+                View
+            </a>
 
-                <!-- DOWNLOAD -->
-                <a href="{{ url_for('static', filename='images/' + event_id + '/' + image) }}" download>
-                    Download
-                </a>
+            <!-- DOWNLOAD -->
+            <a href="{{ image.url }}" download>
+                Download
+            </a>
 
-                <!-- DELETE -->
-                <a href="/delete/{{ event_id }}/{{ image }}">
-                    Delete
-                </a>
-            </div>
+            <!-- DELETE -->
+            <a href="/delete/{{ image.id }}">Delete</a>
+
         </div>
-
     </div>
-    {% endfor %}
+
+</div> 
+
+{% endfor %}
 
 </div>
 
