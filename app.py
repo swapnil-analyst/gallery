@@ -10,9 +10,9 @@ import cloudinary
 import cloudinary.uploader
 
 cloudinary.config(
-    cloud_name="duv4aa2nv",
-    api_key="561459431336125",
-    api_secret="ODGm4AyUUQ-qdLN1AEq_m_wyXFc"
+    cloud_name="dxprjwwji",
+    api_key="749491621426565",
+    api_secret="xLfQG9wz1ncs6cADIu0t9E1yJvk"
 )
 
 app = Flask(__name__)
@@ -119,7 +119,10 @@ def upload(event_id):
 
     for file in files:
         if file and allowed_file(file.filename):
-            result = cloudinary.uploader.upload(file)
+            result = cloudinary.uploader.upload(
+                file,
+                upload_preset="gallery_upload"
+               )
             images_to_save.append(
                 Image(event_id=event_id, url=result['secure_url'])
             )
@@ -143,4 +146,4 @@ def delete(image_id):
     return redirect(request.referrer)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+        app.run(debug=True)
