@@ -2,3 +2,4 @@ Flask
 Flask-SQLAlchemy
 gunicorn
 Werkzeug
+cloudinary==1.36.0

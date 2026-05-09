@@ -9,13 +9,14 @@ from models import db, Event, Image
 import cloudinary
 import cloudinary.uploader
 
+app = Flask(__name__)
+
 cloudinary.config(
     cloud_name="dxprjwwji",
     api_key="749491621426565",
     api_secret="xLfQG9wz1ncs6cADIu0t9E1yJvk"
 )
 
-app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
