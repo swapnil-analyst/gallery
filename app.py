@@ -106,6 +106,7 @@ def gallery(event_id):
 
 @app.route('/upload/<event_id>', methods=['POST'])
 def upload(event_id):
+
     if session.get('event') != event_id:
         return redirect(f'/login/{event_id}')
 
@@ -120,10 +121,13 @@ def upload(event_id):
 
     for file in files:
         if file and allowed_file(file.filename):
+
             result = cloudinary.uploader.upload(
                 file,
+                folder=f"gallery/{event_id}",
                 upload_preset="gallery_upload"
-               )
+            )
+
             images_to_save.append(
                 Image(event_id=event_id, url=result['secure_url'])
             )
